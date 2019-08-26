@@ -2,41 +2,30 @@ package it.gabrieletondi.telldontaskkata.domain;
 
 import java.math.BigDecimal;
 
+import static java.math.RoundingMode.HALF_UP;
+
 public class OrderItem {
-    private Product product;
-    private int quantity;
-    private BigDecimal taxedAmount;
-    private BigDecimal tax;
+    private final Product product;
+    private final int quantity;
 
     public Product getProduct() {
         return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public OrderItem(Product product, int quantity) {
+        this.product = product;
         this.quantity = quantity;
     }
 
-    public BigDecimal getTaxedAmount() {
-        return taxedAmount;
+    public BigDecimal getTotalPriceWithTaxes() {
+        return product.getFinalPrice().multiply(BigDecimal.valueOf(quantity)).setScale(2, HALF_UP);
     }
 
-    public void setTaxedAmount(BigDecimal taxedAmount) {
-        this.taxedAmount = taxedAmount;
-    }
-
-    public BigDecimal getTax() {
-        return tax;
-    }
-
-    public void setTax(BigDecimal tax) {
-        this.tax = tax;
+    public BigDecimal getTotalTaxes() {
+        return product.getUnitaryTax().multiply(BigDecimal.valueOf(quantity));
     }
 }

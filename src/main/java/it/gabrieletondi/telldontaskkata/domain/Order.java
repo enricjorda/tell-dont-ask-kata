@@ -16,10 +16,6 @@ public class Order {
         return total;
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
     public String getCurrency() {
         return currency;
     }
@@ -30,10 +26,6 @@ public class Order {
 
     public BigDecimal getTax() {
         return tax;
-    }
-
-    public void setTax(BigDecimal tax) {
-        this.tax = tax;
     }
 
     public OrderStatus getStatus() {
@@ -60,4 +52,9 @@ public class Order {
         this.tax = new BigDecimal("0.00");
     }
 
+    public void addOrderItem(OrderItem orderItem) {
+        this.items.add(orderItem);
+        this.total = total.add(orderItem.getTotalPriceWithTaxes());
+        this.tax = tax.add(orderItem.getTotalTaxes());
+    }
 }

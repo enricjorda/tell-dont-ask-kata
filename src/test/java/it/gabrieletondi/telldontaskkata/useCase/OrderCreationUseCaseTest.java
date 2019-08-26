@@ -12,7 +12,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -66,13 +65,13 @@ public class OrderCreationUseCaseTest {
         assertThat(insertedOrder.getItems().get(0).getProduct().getName(), is("salad"));
         assertThat(insertedOrder.getItems().get(0).getProduct().getPrice(), is(new BigDecimal("3.56")));
         assertThat(insertedOrder.getItems().get(0).getQuantity(), is(2));
-        assertThat(insertedOrder.getItems().get(0).getTaxedAmount(), is(new BigDecimal("7.84")));
-        assertThat(insertedOrder.getItems().get(0).getTax(), is(new BigDecimal("0.72")));
+        assertThat(insertedOrder.getItems().get(0).getTotalPriceWithTaxes(), is(new BigDecimal("7.84")));
+        assertThat(insertedOrder.getItems().get(0).getTotalTaxes(), is(new BigDecimal("0.72")));
         assertThat(insertedOrder.getItems().get(1).getProduct().getName(), is("tomato"));
         assertThat(insertedOrder.getItems().get(1).getProduct().getPrice(), is(new BigDecimal("4.65")));
         assertThat(insertedOrder.getItems().get(1).getQuantity(), is(3));
-        assertThat(insertedOrder.getItems().get(1).getTaxedAmount(), is(new BigDecimal("15.36")));
-        assertThat(insertedOrder.getItems().get(1).getTax(), is(new BigDecimal("1.41")));
+        assertThat(insertedOrder.getItems().get(1).getTotalPriceWithTaxes(), is(new BigDecimal("15.36")));
+        assertThat(insertedOrder.getItems().get(1).getTotalTaxes(), is(new BigDecimal("1.41")));
     }
 
     @Test(expected = UnknownProductException.class)
