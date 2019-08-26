@@ -23,7 +23,8 @@ public class OrderCreationUseCaseTest {
     private Category food = new Category() {{
         setName("food");
         setTaxPercentage(new BigDecimal("10"));
-    }};;
+    }};
+    ;
     private final ProductCatalog productCatalog = new InMemoryProductCatalog(
             Arrays.<Product>asList(
                     new Product() {{
@@ -41,19 +42,19 @@ public class OrderCreationUseCaseTest {
     private final OrderCreationUseCase useCase = new OrderCreationUseCase(orderRepository, productCatalog);
 
     @Test
-    public void sellMultipleItems() throws Exception {
-        SellItemRequest saladRequest = new SellItemRequest();
-        saladRequest.setProductName("salad");
-        saladRequest.setQuantity(2);
+    public void sellMultipleItems() {
+        SellItemRequest saladRequest = new SellItemRequest(2, "salad");
 
-        SellItemRequest tomatoRequest = new SellItemRequest();
-        tomatoRequest.setProductName("tomato");
-        tomatoRequest.setQuantity(3);
+        SellItemRequest tomatoRequest = new SellItemRequest(3, "tomato");
 
-        final SellItemsRequest request = new SellItemsRequest();
-        request.setRequests(new ArrayList<>());
-        request.getRequests().add(saladRequest);
-        request.getRequests().add(tomatoRequest);
+        final SellItemsRequest request = new SellItemsRequest(
+                new ArrayList() {
+                    {
+                        add(saladRequest);
+                        add(tomatoRequest);
+                    }
+                }
+        );
 
         useCase.run(request);
 
@@ -76,12 +77,14 @@ public class OrderCreationUseCaseTest {
     }
 
     @Test(expected = UnknownProductException.class)
-    public void unknownProduct() throws Exception {
-        SellItemsRequest request = new SellItemsRequest();
-        request.setRequests(new ArrayList<>());
-        SellItemRequest unknownProductRequest = new SellItemRequest();
-        unknownProductRequest.setProductName("unknown product");
-        request.getRequests().add(unknownProductRequest);
+    public void unknownProduct() {
+        SellItemRequest unknownProductRequest = new SellItemRequest(0, "unknown product");
+
+        SellItemsRequest request = new SellItemsRequest(new ArrayList() {
+            {
+                add(unknownProductRequest);
+            }
+        });
 
         useCase.run(request);
     }

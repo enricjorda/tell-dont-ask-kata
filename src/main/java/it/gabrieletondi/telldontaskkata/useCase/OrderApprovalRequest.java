@@ -1,19 +1,16 @@
 package it.gabrieletondi.telldontaskkata.useCase;
 
 public class OrderApprovalRequest {
-    private int orderId;
-    private boolean approved;
+    private final int orderId;
+    private final boolean approved;
 
-    public void setOrderId(int orderId) {
+    public OrderApprovalRequest(int orderId, boolean approved) {
         this.orderId = orderId;
+        this.approved = approved;
     }
 
     public int getOrderId() {
         return orderId;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
     }
 
     public boolean isApproved() {

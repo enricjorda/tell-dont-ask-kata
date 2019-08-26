@@ -3,13 +3,13 @@ package it.gabrieletondi.telldontaskkata.useCase;
 import java.util.List;
 
 public class SellItemsRequest {
-    private List<SellItemRequest> requests;
+    private final List<SellItemRequest> requests;
 
-    public void setRequests(List<SellItemRequest> requests) {
+    public SellItemsRequest(List<SellItemRequest> requests) {
         this.requests = requests;
     }
 
-    public List<SellItemRequest> getRequests() {
+    public Iterable<SellItemRequest> getRequests() {
         return requests;
     }
 }
