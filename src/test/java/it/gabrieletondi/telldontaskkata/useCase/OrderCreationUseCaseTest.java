@@ -27,33 +27,20 @@ public class OrderCreationUseCaseTest {
     ;
     private final ProductCatalog productCatalog = new InMemoryProductCatalog(
             Arrays.<Product>asList(
-                    new Product() {{
-                        setName("salad");
-                        setPrice(new BigDecimal("3.56"));
-                        setCategory(food);
-                    }},
-                    new Product() {{
-                        setName("tomato");
-                        setPrice(new BigDecimal("4.65"));
-                        setCategory(food);
-                    }}
+                    new Product("salad",new BigDecimal("3.56"), food),
+                    new Product("tomato",new BigDecimal("4.65"),food)
             )
     );
     private final OrderCreationUseCase useCase = new OrderCreationUseCase(orderRepository, productCatalog);
 
     @Test
     public void sellMultipleItems() {
-        SellItemRequest saladRequest = new SellItemRequest(2, "salad");
-
-        SellItemRequest tomatoRequest = new SellItemRequest(3, "tomato");
 
         final SellItemsRequest request = new SellItemsRequest(
-                new ArrayList() {
-                    {
-                        add(saladRequest);
-                        add(tomatoRequest);
-                    }
-                }
+                Arrays.asList(
+                        new SellItemRequest(2, "salad"),
+                        new SellItemRequest(3, "tomato")
+                )
         );
 
         useCase.run(request);
