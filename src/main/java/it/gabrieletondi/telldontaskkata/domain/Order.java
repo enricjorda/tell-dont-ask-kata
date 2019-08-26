@@ -9,14 +9,17 @@ import java.util.List;
 import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.*;
 
 public class Order {
-    private BigDecimal total;
     private String currency;
     private List<OrderItem> items;
-    private BigDecimal tax;
     private OrderStatus status;
     private int id;
 
     public BigDecimal getTotal() {
+        BigDecimal total = new BigDecimal("0");
+
+        for (OrderItem item : items) {
+            total = total.add(item.getTotalPriceWithTaxes());
+        }
         return total;
     }
 
@@ -29,7 +32,12 @@ public class Order {
     }
 
     public BigDecimal getTax() {
-        return tax;
+        BigDecimal total = new BigDecimal("0");
+
+        for (OrderItem item : items) {
+            total = total.add(item.getTotalTaxes());
+        }
+        return total;
     }
 
     public OrderStatus getStatus() {
@@ -52,13 +60,11 @@ public class Order {
         this.status = OrderStatus.CREATED;
         this.items = new ArrayList<>();
         this.currency = "EUR";
-        this.total = new BigDecimal("0.00");
         this.tax = new BigDecimal("0.00");
     }
 
     public void addOrderItem(OrderItem orderItem) {
         this.items.add(orderItem);
-        this.total = total.add(orderItem.getTotalPriceWithTaxes());
         this.tax = tax.add(orderItem.getTotalTaxes());
     }
 
