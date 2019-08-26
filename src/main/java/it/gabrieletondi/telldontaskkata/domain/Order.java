@@ -89,16 +89,6 @@ public class Order {
         this.status = OrderStatus.SHIPPED;
     }
 
-    private void validateForShipping() {
-        if (isCreated() || isRejected()) {
-            throw new OrderCannotBeShippedException();
-        }
-
-        if (isShipped()) {
-            throw new OrderCannotBeShippedTwiceException();
-        }
-    }
-
     private boolean isShipped() {
         return status.equals(OrderStatus.SHIPPED);
     }
