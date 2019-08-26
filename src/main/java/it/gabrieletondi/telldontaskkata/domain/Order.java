@@ -11,12 +11,12 @@ import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.*;
 public class Order {
     private String currency;
     private List<OrderItem> items;
-    private OrderStatus status;
-    private int id;
+    protected OrderStatus status;
+    protected int id;
 
-    public Order() {
+    public Order(List<OrderItem> orderItems) {
         this.status = OrderStatus.CREATED;
-        this.items = new ArrayList<>();
+        this.items = orderItems;
         this.currency = "EUR";
     }
 
@@ -44,10 +44,6 @@ public class Order {
             total = total.add(item.getTotalTaxes());
         }
         return total;
-    }
-
-    public void addOrderItem(OrderItem orderItem) {
-        this.items.add(orderItem);
     }
 
     public void approve(boolean approved) {
@@ -110,15 +106,11 @@ public class Order {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
+
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+
 }

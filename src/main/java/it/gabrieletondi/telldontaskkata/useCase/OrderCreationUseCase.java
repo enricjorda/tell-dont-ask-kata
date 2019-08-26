@@ -9,6 +9,9 @@ import it.gabrieletondi.telldontaskkata.repository.ProductCatalog;
 import it.gabrieletondi.telldontaskkata.useCase.request.SellItemRequest;
 import it.gabrieletondi.telldontaskkata.useCase.request.SellItemsRequest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.math.BigDecimal.valueOf;
 
 public class OrderCreationUseCase {
@@ -21,8 +24,8 @@ public class OrderCreationUseCase {
     }
 
     public void run(SellItemsRequest request) {
-        Order order = new Order();
 
+        List<OrderItem> orderItems = new ArrayList<>();
         for (SellItemRequest itemRequest : request.getRequests()) {
             Product product = productCatalog.getByName(itemRequest.getProductName());
 
@@ -30,11 +33,10 @@ public class OrderCreationUseCase {
                 throw new UnknownProductException();
             }
 
-            final OrderItem orderItem = new OrderItem(product, itemRequest.getQuantity());
-
-            order.addOrderItem(orderItem);
+            orderItems.add(new OrderItem(product, itemRequest.getQuantity()));
         }
 
+        Order order = new Order(orderItems);
         orderRepository.save(order);
     }
 
