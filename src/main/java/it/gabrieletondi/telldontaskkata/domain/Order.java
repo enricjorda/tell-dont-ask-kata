@@ -3,10 +3,7 @@ package it.gabrieletondi.telldontaskkata.domain;
 import it.gabrieletondi.telldontaskkata.domain.exceptions.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-
-import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.*;
 
 public class Order {
     private String currency;
@@ -18,6 +15,10 @@ public class Order {
         this.status = OrderStatus.CREATED;
         this.items = orderItems;
         this.currency = "EUR";
+    }
+
+    public Boolean isId(int checkId) {
+        return id==checkId;
     }
 
     public BigDecimal getTotal() {
@@ -85,32 +86,49 @@ public class Order {
         this.status = OrderStatus.SHIPPED;
     }
 
-    private boolean isShipped() {
+    public boolean isShipped() {
         return status.equals(OrderStatus.SHIPPED);
     }
 
-    private boolean isRejected() {
+    public boolean isRejected() {
         return status.equals(OrderStatus.REJECTED);
     }
 
-    private boolean isApproved() {
+    public boolean isApproved() {
         return status.equals(OrderStatus.APPROVED);
     }
 
-    private boolean isCreated() {
-        return status.equals(CREATED);
+    public boolean isCreated() { return status.equals(OrderStatus.CREATED);  }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (id != order.id) return false;
+        if (currency != null ? !currency.equals(order.currency) : order.currency != null) return false;
+        if (items != null ? !items.equals(order.items) : order.items != null) return false;
+        return status == order.status;
     }
 
-
-    public OrderStatus getStatus() {
-        return status;
+    @Override
+    public int hashCode() {
+        int result = currency != null ? currency.hashCode() : 0;
+        result = 31 * result + (items != null ? items.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + id;
+        return result;
     }
 
-
-
-    public int getId() {
-        return id;
+    @Override
+    public String toString() {
+        return "Order{" +
+                "currency='" + currency + '\'' +
+                ", items=" + items +
+                ", status=" + status +
+                ", id=" + id +
+                '}';
     }
-
-
 }

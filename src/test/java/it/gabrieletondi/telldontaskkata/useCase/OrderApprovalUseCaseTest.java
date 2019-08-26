@@ -16,6 +16,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class OrderApprovalUseCaseTest {
     private final TestOrderRepository orderRepository = new TestOrderRepository();
@@ -39,8 +40,7 @@ public class OrderApprovalUseCaseTest {
 
         useCase.run(request);
 
-        final Order savedOrder = orderRepository.getSavedOrder();
-        assertThat(savedOrder.getStatus(), is(OrderStatus.APPROVED));
+        assertTrue(orderRepository.getSavedOrder().isApproved());
     }
 
     @Test
@@ -54,8 +54,7 @@ public class OrderApprovalUseCaseTest {
 
         useCase.run(request);
 
-        final Order savedOrder = orderRepository.getSavedOrder();
-        assertThat(savedOrder.getStatus(), is(OrderStatus.REJECTED));
+        assertTrue(orderRepository.getSavedOrder().isRejected());
     }
 
     @Test(expected = RejectedOrderCannotBeApprovedException.class)
