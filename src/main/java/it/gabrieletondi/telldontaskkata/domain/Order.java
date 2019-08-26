@@ -60,12 +60,10 @@ public class Order {
         this.status = OrderStatus.CREATED;
         this.items = new ArrayList<>();
         this.currency = "EUR";
-        this.tax = new BigDecimal("0.00");
     }
 
     public void addOrderItem(OrderItem orderItem) {
         this.items.add(orderItem);
-        this.tax = tax.add(orderItem.getTotalTaxes());
     }
 
     public void approve(boolean approved) {
