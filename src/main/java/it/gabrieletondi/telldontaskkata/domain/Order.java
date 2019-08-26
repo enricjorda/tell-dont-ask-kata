@@ -1,6 +1,6 @@
 package it.gabrieletondi.telldontaskkata.domain;
 
-import it.gabrieletondi.telldontaskkata.useCase.*;
+import it.gabrieletondi.telldontaskkata.domain.exceptions.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

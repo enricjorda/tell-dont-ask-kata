@@ -2,6 +2,9 @@ package it.gabrieletondi.telldontaskkata.useCase;
 
 import it.gabrieletondi.telldontaskkata.domain.Order;
 import it.gabrieletondi.telldontaskkata.domain.OrderStatus;
+import it.gabrieletondi.telldontaskkata.domain.exceptions.ApprovedOrderCannotBeRejectedException;
+import it.gabrieletondi.telldontaskkata.domain.exceptions.RejectedOrderCannotBeApprovedException;
+import it.gabrieletondi.telldontaskkata.domain.exceptions.ShippedOrdersCannotBeChangedException;
 import it.gabrieletondi.telldontaskkata.doubles.TestOrderRepository;
 import org.junit.Test;
 
