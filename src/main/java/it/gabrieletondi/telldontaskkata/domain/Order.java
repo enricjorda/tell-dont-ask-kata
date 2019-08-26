@@ -14,6 +14,12 @@ public class Order {
     private OrderStatus status;
     private int id;
 
+    public Order() {
+        this.status = OrderStatus.CREATED;
+        this.items = new ArrayList<>();
+        this.currency = "EUR";
+    }
+
     public BigDecimal getTotal() {
         BigDecimal total = new BigDecimal("0");
 
@@ -40,42 +46,57 @@ public class Order {
         return total;
     }
 
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Order() {
-        this.status = OrderStatus.CREATED;
-        this.items = new ArrayList<>();
-        this.currency = "EUR";
-    }
-
     public void addOrderItem(OrderItem orderItem) {
         this.items.add(orderItem);
     }
 
     public void approve(boolean approved) {
-        validateForApproval(approved);
+        if (isShipped()) {
+            throw new ShippedOrdersCannotBeChangedException();
+        }
 
-        this.status = approved ? OrderStatus.APPROVED : OrderStatus.REJECTED;
+        if (approved) {
+            changeStatusToApproved();
+        } else {
+            changeStatusToRejected();
+        }
+
+    }
+
+    private void changeStatusToRejected() {
+        if (isApproved()) {
+            throw new ApprovedOrderCannotBeRejectedException();
+        }
+        this.status = OrderStatus.REJECTED;
+    }
+
+    private void changeStatusToApproved() {
+        if (isRejected()) {
+            throw new RejectedOrderCannotBeApprovedException();
+        }
+        this.status = OrderStatus.APPROVED;
     }
 
     public void ship() {
-        validateForShipping();
+        if (isCreated() || isRejected()) {
+            throw new OrderCannotBeShippedException();
+        }
+
+        if (isShipped()) {
+            throw new OrderCannotBeShippedTwiceException();
+        }
 
         this.status = OrderStatus.SHIPPED;
+    }
+
+    private void validateForShipping() {
+        if (isCreated() || isRejected()) {
+            throw new OrderCannotBeShippedException();
+        }
+
+        if (isShipped()) {
+            throw new OrderCannotBeShippedTwiceException();
+        }
     }
 
     private boolean isShipped() {
@@ -91,30 +112,23 @@ public class Order {
     }
 
     private boolean isCreated() {
-        return getStatus().equals(CREATED);
+        return status.equals(CREATED);
     }
 
-    private void validateForApproval(boolean approved) {
-        if (isShipped()) {
-            throw new ShippedOrdersCannotBeChangedException();
-        }
 
-        if (approved && isRejected()) {
-            throw new RejectedOrderCannotBeApprovedException();
-        }
-
-        if (!approved && isApproved()) {
-            throw new ApprovedOrderCannotBeRejectedException();
-        }
+    public OrderStatus getStatus() {
+        return status;
     }
 
-    private void validateForShipping() {
-        if (isCreated() || isRejected()) {
-            throw new OrderCannotBeShippedException();
-        }
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
 
-        if (isShipped()) {
-            throw new OrderCannotBeShippedTwiceException();
-        }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
