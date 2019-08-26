@@ -1,12 +1,12 @@
 package it.gabrieletondi.telldontaskkata.domain;
 
-import it.gabrieletondi.telldontaskkata.useCase.ApprovedOrderCannotBeRejectedException;
-import it.gabrieletondi.telldontaskkata.useCase.RejectedOrderCannotBeApprovedException;
-import it.gabrieletondi.telldontaskkata.useCase.ShippedOrdersCannotBeChangedException;
+import it.gabrieletondi.telldontaskkata.useCase.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.*;
 
 public class Order {
     private BigDecimal total;
@@ -62,6 +62,18 @@ public class Order {
         this.tax = tax.add(orderItem.getTotalTaxes());
     }
 
+    public void approve(boolean approved) {
+        validateForApproval(approved);
+
+        this.status = approved ? OrderStatus.APPROVED : OrderStatus.REJECTED;
+    }
+
+    public void ship() {
+        validateForShipping();
+
+        this.status = OrderStatus.SHIPPED;
+    }
+
     private boolean isShipped() {
         return status.equals(OrderStatus.SHIPPED);
     }
@@ -74,12 +86,11 @@ public class Order {
         return status.equals(OrderStatus.APPROVED);
     }
 
-    public void approve(boolean approved) {
-        validationsForChangeStatus(approved);
-        this.status = approved ? OrderStatus.APPROVED : OrderStatus.REJECTED;
+    private boolean isCreated() {
+        return getStatus().equals(CREATED);
     }
 
-    private void validationsForChangeStatus(boolean approved) {
+    private void validateForApproval(boolean approved) {
         if (isShipped()) {
             throw new ShippedOrdersCannotBeChangedException();
         }
@@ -90,6 +101,16 @@ public class Order {
 
         if (!approved && isApproved()) {
             throw new ApprovedOrderCannotBeRejectedException();
+        }
+    }
+
+    private void validateForShipping() {
+        if (isCreated() || isRejected()) {
+            throw new OrderCannotBeShippedException();
+        }
+
+        if (isShipped()) {
+            throw new OrderCannotBeShippedTwiceException();
         }
     }
 }
