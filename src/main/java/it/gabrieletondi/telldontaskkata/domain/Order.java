@@ -30,14 +30,6 @@ public class Order {
         return total;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
-    }
-
     public BigDecimal getTax() {
         BigDecimal total = new BigDecimal("0");
 
