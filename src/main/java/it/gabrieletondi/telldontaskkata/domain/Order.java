@@ -40,57 +40,20 @@ public class Order {
     }
 
     public void approve(boolean approved) {
-        if (isShipped()) {
-            throw new ShippedOrdersCannotBeChangedException();
-        }
-
         if (approved) {
-            changeStatusToApproved();
+            this.status = this.status.approve();
         } else {
-            changeStatusToRejected();
+            this.status = this.status.reject();
         }
-
-    }
-
-    private void changeStatusToRejected() {
-        if (isApproved()) {
-            throw new ApprovedOrderCannotBeRejectedException();
-        }
-        this.status = OrderStatus.REJECTED;
-    }
-
-    private void changeStatusToApproved() {
-        if (isRejected()) {
-            throw new RejectedOrderCannotBeApprovedException();
-        }
-        this.status = OrderStatus.APPROVED;
     }
 
     public void ship() {
-        if (isCreated() || isRejected()) {
-            throw new OrderCannotBeShippedException();
-        }
-
-        if (isShipped()) {
-            throw new OrderCannotBeShippedTwiceException();
-        }
-
-        this.status = OrderStatus.SHIPPED;
+        this.status = this.status.ship();
     }
 
-    public boolean isShipped() {
-        return status.equals(OrderStatus.SHIPPED);
+    public OrderStatus getStatus() {
+        return this.status;
     }
-
-    public boolean isRejected() {
-        return status.equals(OrderStatus.REJECTED);
-    }
-
-    public boolean isApproved() {
-        return status.equals(OrderStatus.APPROVED);
-    }
-
-    public boolean isCreated() { return status.equals(OrderStatus.CREATED);  }
 
     @Override
     public boolean equals(Object o) {
